@@ -37,4 +37,3 @@ open_file_object = csv.writer(open(out_file, "wb"))
 for row in data:
   open_file_object.writerow(row)
 
-
