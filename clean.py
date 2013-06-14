@@ -7,39 +7,34 @@ Date: 14th June, 2013
 
 """ 
 
-import csv as csv
+import csv
+import time
 
-filename = "../data/RobotAAC-0430.txt"
+in_file = "../data/RobotAAC-0430.txt"
+out_file = "../result/RobotAAC-0430.csv"
 
-lines = list(csv.reader(open(filename, 'rb'), delimiter='|'))
+rows = list(csv.reader(open(in_file, 'rb'), delimiter='|', skipinitialspace=True))
 
-for line in lines:
-  print(line)
-"""
-with open("../data/RobotAAC-0430.txt") as f:
-  c = csv.reader(f, delimiter='|')
-  for line in c:
+data=[]
+data.append(["timestamp", "id", "command", "datetime", "elapsed_time"]) 
+
+last_time = int(rows[0][0])
+
+for line in rows:
+#  if line[2] and not line[2] == "Keep Alive":
+  if line[2]:
+    line.append(time.strftime('%Y-%m-%d %H:%M:%S', \
+                time.localtime(int(line[0])))) # timestamp
+
+    line.append(int(line[0]) - last_time) # elapsed_time
+    last_time = int(line[0])              # update new last_time
+
+    data.append(line)
     print(line)
 
+open_file_object = csv.writer(open(out_file, "wb"))
+
+for row in data:
+  open_file_object.writerow(row)
 
 
-open_file_object_temp = csv.writer(open("../result/myfirstforest_temp.csv", "wb"))
-i = 0
-for row in train_data:
-  if 'Mr.'        in train_data[i, 2]: title = 1
-  elif 'Mrs.'     in train_data[i, 2]: title = 2
-  elif 'Miss.'    in train_data[i, 2]: title = 3
-  elif 'Master.'  in train_data[i, 2]: title = 4
-  else: title = 0
-
-
-open_file_object = csv.writer(open("../result/myfirstforest_.csv", "wb"))
-test_file_object = csv.reader(open('../data/test.csv', 'rb')) #Load in the csv file
-
-test_file_object.next()
-i = 0
-for row in test_file_object:
-    row.insert(0,output[i].astype(np.uint8))
-    open_file_object.writerow(row)
-    i += 1
- """
